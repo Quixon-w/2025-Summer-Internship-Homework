@@ -31,7 +31,7 @@ public class AdminController {
             return AjaxResult.fail();
         }
     }
-    @DeleteMapping("/{ids}")
+    @PatchMapping("/{ids}")
     public AjaxResult deleteByIds(@RequestBody List<Long> ids){
         try {
             adminService.deleteByIds(ids);
