@@ -3,25 +3,73 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.scu.edu.mapper.AdminMapper">
+
+    <resultMap id="AdminMap" type="cn.scu.edu.domain.Admin">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
     <insert id="add">
-        insert into t_admin(username,nickname,password) values(#{username},#{nickname},#{password})
+        insert into t_admin(username, nickname, password)
+        values (#{username}, #{nickname}, #{password})
     </insert>
+
     <update id="update">
-        update t_admin set username=#{username},nickname=#{nickname},password=#{password} where id=#{id}
+        update t_admin
+        set username=#{username},
+            nickname=#{nickname},
+            password=#{password}
+        where id = #{id}
     </update>
+
     <delete id="delete">
-        delete from t_admin where id=#{id}
+        delete
+        from t_admin
+        where id = #{id}
     </delete>
+
     <delete id="deleteByIds">
         delete from t_admin where id in
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
     <select id="findById" resultType="cn.scu.edu.domain.Admin">
-        select * from t_admin where id=#{id}
+        select *
+        from t_admin
+        where id = #{id}
     </select>
+
     <select id="findAll" resultType="cn.scu.edu.domain.Admin">
-        select * from t_admin
+        select *
+        from t_admin
     </select>
+
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(*) from t_admin
+        <include refid="querySql"></include>
+    </select>
+
+    <select id="queryData" resultType="cn.scu.edu.domain.Admin">
+        select *
+        from t_admin
+        <include refid="querySql"></include>
+        limit #{start},#{pageSize}
+    </select>
+
+
+    <sql id="querySql">
+        <where>
+            <if test="username != null and username != ''">
+                and username like concat('%',#{username},'%')
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname like concat('%',#{nickname},'%')
+            </if>
+        </where>
+    </sql>
+
 </mapper>
